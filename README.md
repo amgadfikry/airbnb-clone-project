@@ -51,14 +51,29 @@ The backend for the Airbnb Clone project is designed to provide a robust and sca
 
 ## Technology Stack
 
-- **Django**: A high-level Python web framework used for building the RESTful API.  
-- **Django REST Framework**: Provides tools for creating and managing RESTful APIs.
-- **PostgreSQL**: A powerful relational database used for data storage.
-- **GraphQL**: Allows for flexible and efficient querying of data.  
-- **Celery**: For handling asynchronous tasks such as sending notifications or processing payments.
-- **Redis**: Used for caching and session management.
-- **Docker**: Containerization tool for consistent development and deployment environments.
-- **CI/CD Pipelines**: Automated pipelines for testing and deploying code changes.  
+- **Django**:  
+Serves as the main backend framework, handling the server-side logic, models, views, authentication, and routing to power the core features like user management, property listings, bookings, and payments.
+
+- **Django REST Framework (DRF)**:  
+Extends Django’s capabilities by providing powerful tools to easily build, document, and manage RESTful APIs, making data exchange between the frontend and backend seamless.
+
+- **PostgreSQL**:  
+Acts as the primary database to securely store and manage structured data for users, properties, bookings, payments, and reviews with high reliability and scalability.
+
+- **GraphQL**:  
+Provides a more efficient and flexible way to fetch or manipulate specific data by allowing clients to request exactly what they need from the backend, reducing over-fetching or under-fetching of data.
+
+- **Celery**:  
+Manages asynchronous tasks like sending confirmation emails, processing background booking updates, or handling payment workflows without blocking the main application processes.
+
+- **Redis**:  
+Used for caching frequently accessed data (like user sessions or popular listings) to improve response times and reduce database load, and also supports Celery as a message broker.
+
+- **Docker**:  
+Containerizes the application and its dependencies, ensuring a consistent environment across development, testing, and production, making deployments more reliable and scalable.
+
+- **CI/CD Pipelines**:  
+Automates the testing, building, and deployment process, helping the team deliver updates faster, catch bugs earlier, and maintain high code quality with every change.
 
 ## Team Roles
 
