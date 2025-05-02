@@ -215,3 +215,25 @@ Evaluates backend functionality, API performance, security, and data integrity t
 - **Security**: Implementing strong hashing for passwords, tokenization for payment methods, and secure API endpoints to protect sensitive data.
 - **Data Validation**: Using Django's built-in validators and serializers to ensure data integrity and security.
 - **Transaction Management**: Using Django's transaction management to ensure data consistency during complex operations like bookings and payments.
+
+## Feature Breakdown
+
+### User Management
+
+This feature allows users to create new accounts, update personal information, and manage their payment methods securely. Users can also delete their accounts, which facilitates flexible and secure management of user data and preferences.
+
+### Property Management
+
+Property management enables hosts to list new properties, update their information, and manage their visibility through filtering searches. Hosts can add or remove amenities and photos, providing a comprehensive toolset for maintaining attractive and current property listings.
+
+### Booking System
+
+The booking system allows users to easily create new bookings, confirm them, update booking details, or delete bookings. This feature streamlines the reservation process, ensuring users can efficiently manage their stay plans.
+
+### Payment Processing
+
+This feature integrates a secure payment system to handle transactions related to bookings. It streamlines payment operations, ensuring that financial exchanges are processed accurately and securely.
+
+### Review System
+
+Users can leave reviews and delete them as needed, enabling feedback on properties and fostering community trust. This feature helps in maintaining transparency and encouraging better services from hosts.
