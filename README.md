@@ -88,3 +88,130 @@ Oversees the deployment, scaling, and monitoring of backend services using Docke
 
 - **QA Engineer**:  
 Evaluates backend functionality, API performance, security, and data integrity through thorough testing processes. They create test plans, protocols, and reports, ensuring that the core features like user management, property management, bookings, payments, and reviews meet quality standards and user expectations.
+
+## Database Design
+
+### Users Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| email | VARCHAR | Unique email address |
+| firstname | VARCHAR | First name of the user |
+| lastname | VARCHAR | Last name of the user |
+| password | VARCHAR | Hashed password |
+| street | VARCHAR | Street address |
+| city | VARCHAR | City address |
+| state | VARCHAR | State address |
+| postal_code | VARCHAR | Postal code |
+| country | VARCHAR | Country |
+| phone | VARCHAR | Phone number |
+| profile_image | VARCHAR | Path or URL to profile image |
+
+### PaymentMethods Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| user_id | UUID/INT | Foreign Key referencing Users(id) |
+| type_of_card | VARCHAR | Type of credit card |
+| card_token | VARCHAR | Tokenized card representation |
+| name_on_card | VARCHAR | Name on the card |
+| expiration_date | DATE | Card expiration date |
+
+### Properties Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| name | VARCHAR | Property name |
+| street | VARCHAR | Street address |
+| city | VARCHAR | City address |
+| state | VARCHAR | State address |
+| postal_code | VARCHAR | Postal code |
+| country | VARCHAR | Country |
+| price | DECIMAL | Price per night |
+| description | TEXT | Property description |
+| discount | DECIMAL | Discount percentage |
+| latitude | DECIMAL | Latitude for geolocation |
+| longitude | DECIMAL | Longitude for geolocation |
+| property_type | VARCHAR | Type of property (e.g., apartment, house) |
+| bedrooms | INT | Number of bedrooms |
+| bathrooms | INT | Number of bathrooms |
+| max_guests | INT | Maximum number of guests |
+| total_rating | DECIMAL | Average rating of the property |
+| owner_id | UUID/INT | Foreign Key referencing Users(id) |
+
+### Photos Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+|url | VARCHAR | URL of the photo |
+
+### amenities Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| name | VARCHAR | Amenity name (e.g., Pool, Gym) |
+| icon | VARCHAR | Icon name or URL |
+
+### property_amenities Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| amenity_id | UUID/INT | Foreign Key referencing Amenities(id) |
+
+### payments Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| booking_id | UUID/INT | Foreign Key referencing Bookings(id) |
+| type | VARCHAR | Type of payment (e.g., credit card, PayPal) |
+| amount | DECIMAL | Amount charged |
+| status | VARCHAR | Payment status (e.g., pending, completed) |
+| payment_method_id | UUID/INT | Foreign Key referencing PaymentMethods(id) |
+| transaction_id | UUID/INT | Unique transaction identifier |
+
+### Bookings Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| user_id | UUID/INT | Foreign Key referencing Users(id) |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| date_in | DATE | Check-in date |
+| date_out | DATE | Check-out date |
+| confirmed | BOOLEAN | Booking confirmation status |
+| total_price | DECIMAL | Total price for the booking |
+| payment_id | UUID/INT | Foreign Key referencing Payments(id) |
+
+### Reviews Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| user_id | UUID/INT | Foreign Key referencing Users(id) |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| comment | TEXT | Review comment |
+| rating | INT | Rating score (e.g., 1 to 5) |
+
+### Relationships
+
+- **Users** can have multiple **PaymentMethods**, **Bookings**, and **Reviews**.
+- **Properties** can have multiple **Photos**, **Bookings**, and **Reviews**.
+- **amentities** relate to **Properties** via the `property_amenities` join table.
+
+### Design Considerations
+
+- **Indexing**: Fields like `user_id`, `property_id`, and date fields will be indexed for performance.
+- **Caching**: caching frequent queries to enhance response times.
+- **Availability Logic**: Using the dynamic query logic to determine property availability instead of a static field.
+- **Geospatial Queries**: using a geospatial database extension (like PostGIS in PostgreSQL) to handle latitude and longitude efficiently.
+- **Security**: Implementing strong hashing for passwords, tokenization for payment methods, and secure API endpoints to protect sensitive data.
+- **Data Validation**: Using Django's built-in validators and serializers to ensure data integrity and security.
+- **Transaction Management**: Using Django's transaction management to ensure data consistency during complex operations like bookings and payments.
