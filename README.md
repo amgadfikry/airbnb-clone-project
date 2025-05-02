@@ -237,3 +237,25 @@ This feature integrates a secure payment system to handle transactions related t
 ### Review System
 
 Users can leave reviews and delete them as needed, enabling feedback on properties and fostering community trust. This feature helps in maintaining transparency and encouraging better services from hosts.
+
+## API Security
+
+- **JWT Tokens and Cookies**: Used for robust authentication and authorization to manage user sessions securely, ensuring that only verified users have access to the application features.
+
+- **Password Hashing with Bcrypt**: Ensures user passwords are hashed with salt to protect credentials against brute-force attacks, maintaining password security across the platform.
+
+- **Bcrypt for Payment Information**: Encrypts sensitive payment card details to protect user financial data from unauthorized access and potential fraud.
+
+- **Django Permissions and Authentication**: Utilizes Django's built-in permissions and authentication mechanisms to enforce access control, ensuring that users can only access resources they are authorized to view or modify.
+
+- **Input Validation and Sanitization**: All user inputs are validated and sanitized to prevent SQL injection, cross-site scripting (XSS), and other common web vulnerabilities.
+
+- **Secure Cookies and Tokens**: Safeguard API communication by caching JWT tokens and cookies, securing data exchanges and preventing interception during transmission.
+
+- **Rate Limiting**: Implemented to control request frequency, prevent misuse of API resources, and protect against denial-of-service (DoS) attacks, ensuring fair usage across users.
+
+- **HTTPS**: All API interactions occur over HTTPS to encrypt data transmission and secure communication channels.
+
+- **CORS Configuration**: Properly configured Cross-Origin Resource Sharing (CORS) ensures prevention of unauthorized external access to the API.
+
+- **Logging and Monitoring**: Regularly logs API activities, enabling prompt detection and response to suspicious activities and maintaining application integrity.
