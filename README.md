@@ -103,6 +103,7 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | phone | VARCHAR | Phone number |
 | profile_image | VARCHAR | Path or URL to profile image |
 | is_verified | BOOLEAN | Verification status |
+| verified_at | TIMESTAMP | Verification date |
 | created_at | TIMESTAMP | Account creation date |
 | updated_at | TIMESTAMP | Last update date |
 
@@ -110,8 +111,8 @@ Evaluates backend functionality, API performance, security, and data integrity t
 
 | Field | Type | Description |
 |-----|----|-----------|
-| id | UUID/INT | Primary Key(unique identifier) |
-| user_id | UUID/INT | Foreign Key referencing Users(id) |
+| id | UUID/INT | Primary Key |
+| user_id | UUID/INT | Foreign Key referencing Users(id) (unique) |
 | street | VARCHAR | Street address |
 | city | VARCHAR | City address |
 | state | VARCHAR | State address |
@@ -246,7 +247,7 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | id | UUID/INT | Primary Key |
 | booking_id | UUID/INT | Foreign Key referencing Bookings(id) |
 | amount | DECIMAL | Amount charged |
-| status | VARCHAR | Payment status (e.g., pending, completed) |
+| status | ENUM | Payment status ('pending', 'completed', 'failed') |
 | payment_method_id | UUID/INT | Foreign Key referencing PaymentMethods(id) |
 | transaction_id | UUID/INT | Unique transaction identifier |
 | created_at | TIMESTAMP | Payment creation date |
@@ -286,6 +287,7 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | receiver_id | UUID/INT | Foreign Key referencing Users(id) |
 | message | TEXT | Message content |
 | send_at | TIMESTAMP | Message sent date |
+| read_at | TIMESTAMP | Message read date |
 
 ### Relationships
 
