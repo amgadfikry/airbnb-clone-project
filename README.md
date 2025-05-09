@@ -91,7 +91,7 @@ Evaluates backend functionality, API performance, security, and data integrity t
 
 ## Database Design
 
-### Users Table
+### users Table
 
 | Field | Type | Description |
 |-----|----|-----------|
@@ -100,15 +100,43 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | firstname | VARCHAR | First name of the user |
 | lastname | VARCHAR | Last name of the user |
 | password | VARCHAR | Hashed password |
+| phone | VARCHAR | Phone number |
+| profile_image | VARCHAR | Path or URL to profile image |
+| is_verified | BOOLEAN | Verification status |
+| created_at | TIMESTAMP | Account creation date |
+| updated_at | TIMESTAMP | Last update date |
+
+### user_addresses Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key(unique identifier) |
+| user_id | UUID/INT | Foreign Key referencing Users(id) |
 | street | VARCHAR | Street address |
 | city | VARCHAR | City address |
 | state | VARCHAR | State address |
 | postal_code | VARCHAR | Postal code |
 | country | VARCHAR | Country |
-| phone | VARCHAR | Phone number |
-| profile_image | VARCHAR | Path or URL to profile image |
+| created_at | TIMESTAMP | Address creation date |
+| updated_at | TIMESTAMP | Last update date |
 
-### PaymentMethods Table
+### roles Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| name | VARCHAR | Role name (e.g., user, host) |
+| description | TEXT | Role description |
+
+### user_roles Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| user_id | UUID/INT | Foreign Key referencing Users(id) |
+| role_id | UUID/INT | Foreign Key referencing Roles(id) |
+| created_at | TIMESTAMP | Role assignment date |
+
+### payment_methods Table
 
 | Field | Type | Description |
 |-----|----|-----------|
@@ -118,37 +146,70 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | card_token | VARCHAR | Tokenized card representation |
 | name_on_card | VARCHAR | Name on the card |
 | expiration_date | DATE | Card expiration date |
+| created_at | TIMESTAMP | Card creation date |
+| updated_at | TIMESTAMP | Last update date |
 
-### Properties Table
+### properties Table
 
 | Field | Type | Description |
 |-----|----|-----------|
 | id | UUID/INT | Primary Key |
+| owner_id | UUID/INT | Foreign Key referencing Users(id) |
 | name | VARCHAR | Property name |
-| street | VARCHAR | Street address |
-| city | VARCHAR | City address |
-| state | VARCHAR | State address |
-| postal_code | VARCHAR | Postal code |
-| country | VARCHAR | Country |
 | price | DECIMAL | Price per night |
 | description | TEXT | Property description |
 | discount | DECIMAL | Discount percentage |
-| latitude | DECIMAL | Latitude for geolocation |
-| longitude | DECIMAL | Longitude for geolocation |
+| is_active | BOOLEAN | Property visibility status |
 | property_type | VARCHAR | Type of property (e.g., apartment, house) |
 | bedrooms | INT | Number of bedrooms |
 | bathrooms | INT | Number of bathrooms |
 | max_guests | INT | Maximum number of guests |
 | total_rating | DECIMAL | Average rating of the property |
-| owner_id | UUID/INT | Foreign Key referencing Users(id) |
+| created_at | TIMESTAMP | Property creation date |
+| updated_at | TIMESTAMP | Last update date |
 
-### Photos Table
+### property_addresses Table
 
 | Field | Type | Description |
 |-----|----|-----------|
 | id | UUID/INT | Primary Key |
 | property_id | UUID/INT | Foreign Key referencing Properties(id) |
-|url | VARCHAR | URL of the photo |
+| street | VARCHAR | Street address |
+| city | VARCHAR | City address |
+| state | VARCHAR | State address |
+| postal_code | VARCHAR | Postal code |
+| country | VARCHAR | Country |
+| latitude | DECIMAL | Latitude for geolocation |
+| longitude | DECIMAL | Longitude for geolocation |
+| created_at | TIMESTAMP | Address creation date |
+| updated_at | TIMESTAMP | Last update date |
+
+### property_rules Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| smoking | BOOLEAN | Smoking allowed |
+| pets | BOOLEAN | Pets allowed |
+| parties | BOOLEAN | Parties allowed |
+| check_in_time | TIME | Check-in time |
+| check_out_time | TIME | Check-out time |
+| cancellation_policy | VARCHAR | Cancellation policy description |
+| children | BOOLEAN | Children allowed |
+| created_at | TIMESTAMP | Rule creation date |
+| updated_at | TIMESTAMP | Last update date |
+
+### photos Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| url | VARCHAR | URL of the photo |
+| type | ENUM | Type of photo ('main', 'gallery') |
+| created_at | TIMESTAMP | Photo upload date |
+| updated_at | TIMESTAMP | Last update date |
 
 ### amenities Table
 
@@ -164,6 +225,19 @@ Evaluates backend functionality, API performance, security, and data integrity t
 |-----|----|-----------|
 | property_id | UUID/INT | Foreign Key referencing Properties(id) |
 | amenity_id | UUID/INT | Foreign Key referencing Amenities(id) |
+| created_at | TIMESTAMP | Association creation date |
+
+### property_calendar Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| property_id | UUID/INT | Foreign Key referencing Properties(id) |
+| date | DATE | Date of availability |
+| status | ENUM | Availability status ('available', 'pending', 'booked', 'blocked') |
+| price | DECIMAL | Price for the date |
+| created_at | TIMESTAMP | Calendar entry creation date |
+| updated_at | TIMESTAMP | Last update date |
 
 ### payments Table
 
@@ -171,13 +245,14 @@ Evaluates backend functionality, API performance, security, and data integrity t
 |-----|----|-----------|
 | id | UUID/INT | Primary Key |
 | booking_id | UUID/INT | Foreign Key referencing Bookings(id) |
-| type | VARCHAR | Type of payment (e.g., credit card, PayPal) |
 | amount | DECIMAL | Amount charged |
 | status | VARCHAR | Payment status (e.g., pending, completed) |
 | payment_method_id | UUID/INT | Foreign Key referencing PaymentMethods(id) |
 | transaction_id | UUID/INT | Unique transaction identifier |
+| created_at | TIMESTAMP | Payment creation date |
+| end_at | TIMESTAMP | Payment completion date |
 
-### Bookings Table
+### bookings Table
 
 | Field | Type | Description |
 |-----|----|-----------|
@@ -186,11 +261,12 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | property_id | UUID/INT | Foreign Key referencing Properties(id) |
 | date_in | DATE | Check-in date |
 | date_out | DATE | Check-out date |
-| confirmed | BOOLEAN | Booking confirmation status |
+| status | ENUM | Booking status ('pending', 'confirmed', 'cancelled') |
 | total_price | DECIMAL | Total price for the booking |
-| payment_id | UUID/INT | Foreign Key referencing Payments(id) |
+| created_at | TIMESTAMP | Booking creation date |
+| updated_at | TIMESTAMP | Last update date |
 
-### Reviews Table
+### reviews Table
 
 | Field | Type | Description |
 |-----|----|-----------|
@@ -199,18 +275,41 @@ Evaluates backend functionality, API performance, security, and data integrity t
 | property_id | UUID/INT | Foreign Key referencing Properties(id) |
 | comment | TEXT | Review comment |
 | rating | INT | Rating score (e.g., 1 to 5) |
+| created_at | TIMESTAMP | Review creation date |
+
+### messages Table
+
+| Field | Type | Description |
+|-----|----|-----------|
+| id | UUID/INT | Primary Key |
+| sender_id | UUID/INT | Foreign Key referencing Users(id) |
+| receiver_id | UUID/INT | Foreign Key referencing Users(id) |
+| message | TEXT | Message content |
+| send_at | TIMESTAMP | Message sent date |
 
 ### Relationships
 
-- **Users** can have multiple **PaymentMethods**, **Bookings**, and **Reviews**.
-- **Properties** can have multiple **Photos**, **Bookings**, and **Reviews**.
-- **amentities** relate to **Properties** via the `property_amenities` join table.
+- **users** can have one **usere_addresses** and multiple **user_roles**, **payment_methods**, **bookings**, and **reviews**.
+- **properties** can have one **property_addresses** and **property_rules** and multiple **photos**, **bookings**, **amenities**, **property_calendar** and **reviews**.
+- **amentities** relate to **properties** via the `property_amenities` join table.
+- **roles** relate to **users** via the `user_roles` join table.
 
 ### Design Considerations
 
-- **Indexing**: Fields like `user_id`, `property_id`, and date fields will be indexed for performance.
+- **Indexing**:
+    1. `email` in the `users` table for quick user lookups.
+    2. `user_id` in the `user_addresses` table for fast address retrieval.
+    3. `user_id` and `role_id` in the `user_roles` table for efficient role management and avoidance of duplicates.  
+    4. `user_id` in the `payment_methods` table for quick access to user payment methods.  
+    5. `price`, `total_rating`, and `is_active` in the `properties` table for efficient property searches.  
+    6. `property_id`, `status`, and `date` in the `property_calendar` table for quick availability checks.  
+    7. `property_id`, `city`, `country`, and `state` in the `property_addresses` table for efficient geolocation queries.  
+    8. `property_id` in the `property_rules` table for quick access to property rules.  
+    9. `property_id`, `amentity_id` in the `property_amenities` table for efficient amenity searches.  
+    10. `property_id` in the `reviews` table for quick access to user reviews.  
+    11. `user_id` and `property_id` in the `bookings` table for quick access to user bookings.  
+    12. `sender_id` and `receiver_id` in the `messages` table for quick access to user messages.  
 - **Caching**: caching frequent queries to enhance response times.
-- **Availability Logic**: Using the dynamic query logic to determine property availability instead of a static field.
 - **Geospatial Queries**: using a geospatial database extension (like PostGIS in PostgreSQL) to handle latitude and longitude efficiently.
 - **Security**: Implementing strong hashing for passwords, tokenization for payment methods, and secure API endpoints to protect sensitive data.
 - **Data Validation**: Using Django's built-in validators and serializers to ensure data integrity and security.
